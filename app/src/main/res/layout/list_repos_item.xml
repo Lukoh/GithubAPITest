@@ -23,50 +23,50 @@
             android:padding="2dp">
 
             <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp">
 
                 <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/container_info"
-                android:layout_toRightOf="@+id/iv_image"
-                android:layout_marginLeft="9dp"
-                android:layout_marginTop="2dp" >
-
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_width="320dp"
                     android:layout_height="wrap_content"
-                    android:text="Lukoh"
-                    android:id="@+id/tv_name"
-                    android:layout_marginBottom="7dp"
-                    android:textColor="@color/black"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textSize="14dp" />
+                    android:id="@+id/container_info"
+                    android:layout_toRightOf="@+id/iv_image"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginTop="2dp" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="It's great."
-                    android:id="@+id/tv_description"
-                    android:layout_marginBottom="7dp"
-                    android:textColor="@color/black"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:textSize="14dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lukoh"
+                        android:id="@+id/tv_name"
+                        android:layout_marginBottom="7dp"
+                        android:textColor="@color/black"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textSize="14dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="It's great."
+                        android:id="@+id/tv_description"
+                        android:layout_marginBottom="7dp"
+                        android:textColor="@color/black"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textSize="14dp" />
 
-            </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/container_count"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginRight="2dp"
                     android:layout_marginTop="14dp" >
 
                     <TextView
@@ -83,8 +83,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-
 
         </RelativeLayout>
 

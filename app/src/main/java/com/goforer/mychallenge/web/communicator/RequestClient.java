@@ -162,6 +162,6 @@ public enum RequestClient {
         Call<User> getUser();
 
         @GET("/users/jakewharton/repos")
-        Call<Repos> getRepos();
+        Call<List<Repos>> getRepos();
     }
 }

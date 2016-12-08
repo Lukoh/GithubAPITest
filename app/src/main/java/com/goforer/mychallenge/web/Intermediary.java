@@ -8,6 +8,8 @@ import com.goforer.mychallenge.model.data.Repos;
 import com.goforer.mychallenge.model.data.User;
 import com.goforer.mychallenge.web.communicator.RequestClient;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -32,16 +34,16 @@ public enum Intermediary {
     }
 
     public void getRepos(Context context, ResponseReposEvent event) {
-        Call<Repos> call = RequestClient.INSTANCE.getRequestMethod(context)
+        Call<List<Repos>> call = RequestClient.INSTANCE.getRequestMethod(context)
                 .getRepos();
         call.enqueue(new RequestClient.RequestReposCallback(event) {
             @Override
-            public void onResponse(Call<Repos> call, Response<Repos> response) {
+            public void onResponse(Call<List<Repos>> call, Response<List<Repos>> response) {
                 super.onResponse(call, response);
             }
 
             @Override
-            public void onFailure(Call<Repos> call, Throwable t) {
+            public void onFailure(Call<List<Repos>> call, Throwable t) {
                 super.onFailure(call, t);
             }
         });

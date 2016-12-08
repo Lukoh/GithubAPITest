@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity activity = activityWeakRef.get();
             if (activity != null) {
-                for(int i = 1; i < mRepos.size(); i++) {
+                for(int i = 1; i < items.size(); i++) {
                     mAdapter.addItem((Repos)items.get(i));
                 }
 

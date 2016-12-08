@@ -46,7 +46,7 @@ public class ReposAdatper extends BaseAdapter {
 
         holder.mTvName.setText(item.getName());
         holder.mTvDescription.setText(item.getDescription());
-        holder.mTvCount.setText(item.getStarCount());
+        holder.mTvCount.setText(String.valueOf(item.getStarCount()));
 
         return convertView;
     }

@@ -11,6 +11,7 @@ import com.goforer.mychallenge.utility.ConnectionUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -124,7 +125,7 @@ public enum RequestClient {
      * Communicates responses from Server or offline requests.
      * One and only one method will be invoked in response to a given request.
      */
-    static public class RequestReposCallback implements Callback<Repos> {
+    static public class RequestReposCallback implements Callback<List<Repos>> {
         private ResponseReposEvent mEvent;
 
         public RequestReposCallback(ResponseReposEvent event) {
@@ -132,8 +133,8 @@ public enum RequestClient {
         }
 
         @Override
-        public void onResponse(Call<Repos> call,
-                               retrofit2.Response<Repos> response) {
+        public void onResponse(Call<List<Repos>> call,
+                               retrofit2.Response<List<Repos>> response) {
             if (mEvent != null) {
                 mEvent.setResponseClient(response.body());
                 mEvent.parseInResponse();
@@ -143,7 +144,7 @@ public enum RequestClient {
         }
 
         @Override
-        public void onFailure(Call<Repos> call, Throwable t) {
+        public void onFailure(Call<List<Repos>> call, Throwable t) {
             boolean isDeviceEnabled = true;
 
             if (!ConnectionUtils.isNetworkAvailable(mContext)) {
@@ -151,7 +152,6 @@ public enum RequestClient {
             }
 
             if (mEvent != null) {
-                mEvent.setResponseClient(new Repos());
                 EventBus.getDefault().post(mEvent);
             }
         }

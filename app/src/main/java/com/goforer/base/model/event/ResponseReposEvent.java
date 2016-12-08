@@ -2,12 +2,14 @@ package com.goforer.base.model.event;
 
 import com.goforer.mychallenge.model.data.Repos;
 
+import java.util.List;
+
 /**
  * Created by USER on 2016-12-08.
  */
 
 public class ResponseReposEvent {
-    protected Repos mResponse;
+    protected List<Repos> mResponse;
     protected String mTag;
 
     public boolean isMine(String tag){
@@ -17,11 +19,11 @@ public class ResponseReposEvent {
     public void parseInResponse() {
     }
 
-    public Repos getResponseClient() { return mResponse; }
+    public List<Repos> getResponseClient() { return mResponse; }
 
     public String getTag() { return mTag; }
 
-    public void setResponseClient(Repos responses) { mResponse = responses; }
+    public void setResponseClient(List<Repos> responses) { mResponse = responses; }
 
     public void setTag(String tag) { mTag = tag; }
 }

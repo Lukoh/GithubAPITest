@@ -7,7 +7,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goforer.base.model.ListModel;
 import com.goforer.base.model.event.ResponseEvent;
 import com.goforer.base.model.event.ResponseListEvent;
 import com.goforer.base.ui.view.ThumbnailImageView;
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List doInBackground(Void... params) {
-            return new ListModel<>(Repos.class).fromJson(mEvent.getResponseClient().toString());
+            return mEvent.getResponseClient();
         }
 
         @Override

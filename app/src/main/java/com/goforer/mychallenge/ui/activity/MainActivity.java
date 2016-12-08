@@ -4,28 +4,37 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.goforer.base.model.ListModel;
 import com.goforer.base.model.event.ResponseEvent;
+import com.goforer.base.model.event.ResponseListEvent;
+import com.goforer.base.ui.view.ThumbnailImageView;
 import com.goforer.mychallenge.R;
 import com.goforer.mychallenge.model.data.Repos;
 import com.goforer.mychallenge.model.data.User;
+import com.goforer.mychallenge.model.data.sort.ReposComparator;
 import com.goforer.mychallenge.model.event.ContentsDataEvent;
+import com.goforer.mychallenge.model.event.ContentsUserDataEvent;
 import com.goforer.mychallenge.ui.adapter.ReposAdatper;
 import com.goforer.mychallenge.utility.ConnectionUtils;
 import com.goforer.mychallenge.web.Intermediary;
-import com.google.gson.JsonElement;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private ReposAdatper mAdapter;
+
+    private ThumbnailImageView mImageView;
+    private TextView mNameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +47,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        mImageView = (ThumbnailImageView) findViewById(R.id.iv_image);
+        mNameView = (TextView) findViewById(R.id.tv_name);
         mListView = (ListView) findViewById(R.id.lv_repos);
 
         mAdapter = new ReposAdatper(this);
 
 
-        ContentsDataEvent userEvent = new ContentsDataEvent(true, 0);
+        ContentsUserDataEvent userEvent = new ContentsUserDataEvent(true, 0);
         Intermediary.INSTANCE.getUser(getApplicationContext(), userEvent);
 
         ContentsDataEvent reposEvent = new ContentsDataEvent(true, 1);
@@ -56,15 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressWarnings("")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onEvent(ContentsDataEvent event) {
-        if (event.getType() == 0) {
-            new parseUserTask(this, event).execute();
-        } else {
-            new parsePeposTask(this, event).execute();
-        }
+    public void onEvent(ContentsUserDataEvent event) {
+        new parseUserTask(this, event).execute();
     }
 
-    private class parseUserTask extends AsyncTask<Void, Void, String> {
+    @SuppressWarnings("")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onEvent(ContentsDataEvent event) {
+            new parsePeposTask(this, event).execute();
+    }
+
+    private class parseUserTask extends AsyncTask<Void, Void, User> {
         private ResponseEvent mEvent;
         private WeakReference<MainActivity> activityWeakRef;
 
@@ -75,29 +88,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-            String query;
-            if (mEvent.getResponseClient().isSuccessful()) {
-                query = mEvent.getResponseClient().getQuery().toString();
-            } else {
-                showMessage(getResources().getString(R.string.no_result));
-            }
-            return query;
+        protected User doInBackground(Void... params) {
+            return mEvent.getResponseClient();
         }
 
         @Override
-        protected void onPostExecute(String query) {
-            super.onPostExecute(query);
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
 
             MainActivity activity = activityWeakRef.get();
             if (activity != null) {
-                if (mEvent.getResponseClient().isSuccessful()) {
-                    JsonElement results = User.gson().fromJson(query, User.class)
-                    if (results == null) {
-                        showMessage(getResources().getString(R.string.no_result));
-                    } else {
-                    }
-
+                if (user == null) {
+                    showMessage(getResources().getString(R.string.no_result));
+                } else {
+                    mImageView.setImage(user.getAvartarUrl());
+                    mNameView.setText(user.getName());
                 }
             } else {
                 showMessage(getResources().getString(R.string.no_result));
@@ -105,52 +110,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class parsePeposTask extends AsyncTask<Void, Void, String> {
-        private ResponseEvent mEvent;
+    private class parsePeposTask extends AsyncTask<Void, Void, List> {
+        private ResponseListEvent mEvent;
         private WeakReference<MainActivity> activityWeakRef;
 
         private List<Repos> mRepos;
 
-        private parsePeposTask(MainActivity activity, ResponseEvent event) {
+        private parsePeposTask(MainActivity activity, ResponseListEvent event) {
             mEvent = event;
 
             activityWeakRef = new WeakReference<>(activity);
         }
 
         @Override
-        protected String doInBackground(Void... params) {
-            String query;
-            if (mEvent.getResponseClient().isSuccessful()) {
-                query = mEvent.getResponseClient().getQuery().toString();
-            } else {
-                JsonElement results = User.gson().fromJson(query, User.class)
-            }
-            return query;
+        protected List doInBackground(Void... params) {
+            return new ListModel<>(Repos.class).fromJson(mEvent.getResponseClient().toString());
         }
 
         @Override
-        protected void onPostExecute(String query) {
+        protected void onPostExecute(List items) {
+            Collections.sort(items, new ReposComparator());
 
-
-            super.onPostExecute(query);
+            super.onPostExecute(items);
 
             MainActivity activity = activityWeakRef.get();
             if (activity != null) {
-                if (mEvent.getResponseClient().isSuccessful()) {
-                    JsonElement results = Repos.gson().fromJson(query, Repos.class).getResults();
-                    if (results == null) {
-                        showMessage(getResources().getString(R.string.no_result));
-                    } else {
-                        mRepos = mEvent.getResponseClient().getResult();
-
-                        for(int i = 1; i < mRepos.size(); i++) {
-                            mAdapter.addItem(mRepos.get(i));
-                        }
-
-                        mListView.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-                    }
+                for(int i = 1; i < mRepos.size(); i++) {
+                    mAdapter.addItem((Repos)items.get(i));
                 }
+
+                mListView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             } else {
                 showMessage(getResources().getString(R.string.no_result));
             }

@@ -15,6 +15,8 @@ public class User extends BaseModel implements Parcelable {
     private String mAvatarId;
     @SerializedName("url")
     private String mUrl;
+    @SerializedName("name")
+    private String mName;
 
     public User() {
     }
@@ -51,11 +53,20 @@ public class User extends BaseModel implements Parcelable {
         mUrl = url;
     }
 
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
     protected User(Parcel in) {
         mId = in.readLong();
         mAvatarUrl = in.readString();
         mAvatarId = in.readString();
         mUrl = in.readString();
+        mName = in.readString();
     }
 
     @Override
@@ -69,6 +80,7 @@ public class User extends BaseModel implements Parcelable {
         dest.writeString(mAvatarUrl);
         dest.writeString(mAvatarId);
         dest.writeString(mUrl);
+        dest.writeString(mName);
     }
 
     @SuppressWarnings("unused")

@@ -16,10 +16,10 @@
 
 package com.goforer.base.model.event;
 
-import com.goforer.mychallenge.model.data.Responses;
+import com.goforer.mychallenge.model.data.User;
 
 public class ResponseEvent {
-    protected Responses mResponse;
+    protected User mResponse;
     protected String mTag;
 
     public boolean isMine(String tag){
@@ -29,11 +29,11 @@ public class ResponseEvent {
     public void parseInResponse() {
     }
 
-    public Responses getResponseClient() { return mResponse; }
+    public User getResponseClient() { return mResponse; }
 
     public String getTag() { return mTag; }
 
-    public void setResponseClient(Responses responses) { mResponse = responses; }
+    public void setResponseClient(User responses) { mResponse = responses; }
 
     public void setTag(String tag) { mTag = tag; }
 }

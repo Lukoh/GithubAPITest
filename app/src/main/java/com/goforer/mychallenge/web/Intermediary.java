@@ -3,7 +3,9 @@ package com.goforer.mychallenge.web;
 import android.content.Context;
 
 import com.goforer.base.model.event.ResponseEvent;
-import com.goforer.mychallenge.model.data.Responses;
+import com.goforer.base.model.event.ResponseReposEvent;
+import com.goforer.mychallenge.model.data.Repos;
+import com.goforer.mychallenge.model.data.User;
 import com.goforer.mychallenge.web.communicator.RequestClient;
 
 import retrofit2.Call;
@@ -14,32 +16,32 @@ public enum Intermediary {
 
     public void getUser(Context context, ResponseEvent event)  {
 
-        Call<Responses> call = RequestClient.INSTANCE.getRequestMethod(context)
+        Call<User> call = RequestClient.INSTANCE.getRequestMethod(context)
                 .getUser();
-        call.enqueue(new RequestClient.RequestCallback(event) {
+        call.enqueue(new RequestClient.RequestUserCallback(event) {
             @Override
-            public void onResponse(Call<Responses> call, Response<Responses> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 super.onResponse(call, response);
             }
 
             @Override
-            public void onFailure(Call<Responses> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 super.onFailure(call, t);
             }
         });
     }
 
-    public void getRepos(Context context, ResponseEvent event) {
-        Call<Responses> call = RequestClient.INSTANCE.getRequestMethod(context)
+    public void getRepos(Context context, ResponseReposEvent event) {
+        Call<Repos> call = RequestClient.INSTANCE.getRequestMethod(context)
                 .getRepos();
-        call.enqueue(new RequestClient.RequestCallback(event) {
+        call.enqueue(new RequestClient.RequestReposCallback(event) {
             @Override
-            public void onResponse(Call<Responses> call, Response<Responses> response) {
+            public void onResponse(Call<Repos> call, Response<Repos> response) {
                 super.onResponse(call, response);
             }
 
             @Override
-            public void onFailure(Call<Responses> call, Throwable t) {
+            public void onFailure(Call<Repos> call, Throwable t) {
                 super.onFailure(call, t);
             }
         });

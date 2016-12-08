@@ -3,7 +3,9 @@ package com.goforer.mychallenge.web.communicator;
 import android.content.Context;
 
 import com.goforer.base.model.event.ResponseEvent;
-import com.goforer.mychallenge.model.data.Responses;
+import com.goforer.base.model.event.ResponseReposEvent;
+import com.goforer.mychallenge.model.data.Repos;
+import com.goforer.mychallenge.model.data.User;
 import com.goforer.mychallenge.utility.ConnectionUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,7 +69,7 @@ public enum RequestClient {
 
             OkHttpClient client = httpClient.build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://api.github.com/users")
+                    .baseUrl("https://api.github.com")
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
@@ -85,19 +87,18 @@ public enum RequestClient {
      * Communicates responses from Server or offline requests.
      * One and only one method will be invoked in response to a given request.
      */
-    static public class RequestCallback implements Callback<Responses> {
+    static public class RequestUserCallback implements Callback<User> {
         private ResponseEvent mEvent;
 
-        public RequestCallback(ResponseEvent event) {
+        public RequestUserCallback(ResponseEvent event) {
             mEvent = event;
         }
 
         @Override
-        public void onResponse(Call<Responses> call,
-                               retrofit2.Response<Responses> response) {
+        public void onResponse(Call<User> call,
+                               retrofit2.Response<User> response) {
             if (mEvent != null) {
                 mEvent.setResponseClient(response.body());
-                mEvent.getResponseClient().setStatus(Responses.SUCCESSFUL);
                 mEvent.parseInResponse();
 
                 EventBus.getDefault().post(mEvent);
@@ -105,7 +106,7 @@ public enum RequestClient {
         }
 
         @Override
-        public void onFailure(Call<Responses> call, Throwable t) {
+        public void onFailure(Call<User> call, Throwable t) {
             boolean isDeviceEnabled = true;
 
             if (!ConnectionUtils.isNetworkAvailable(mContext)) {
@@ -113,23 +114,54 @@ public enum RequestClient {
             }
 
             if (mEvent != null) {
-                mEvent.setResponseClient(new Responses());
-                if (!isDeviceEnabled) {
-                    mEvent.getResponseClient().setStatus(Responses.NETWORK_ERROR);
-                } else {
-                    mEvent.getResponseClient().setStatus(Responses.GENERAL_ERROR);
-                }
+                mEvent.setResponseClient(new User());
+                EventBus.getDefault().post(mEvent);
+            }
+        }
+    }
 
+    /**
+     * Communicates responses from Server or offline requests.
+     * One and only one method will be invoked in response to a given request.
+     */
+    static public class RequestReposCallback implements Callback<Repos> {
+        private ResponseReposEvent mEvent;
+
+        public RequestReposCallback(ResponseReposEvent event) {
+            mEvent = event;
+        }
+
+        @Override
+        public void onResponse(Call<Repos> call,
+                               retrofit2.Response<Repos> response) {
+            if (mEvent != null) {
+                mEvent.setResponseClient(response.body());
+                mEvent.parseInResponse();
+
+                EventBus.getDefault().post(mEvent);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Repos> call, Throwable t) {
+            boolean isDeviceEnabled = true;
+
+            if (!ConnectionUtils.isNetworkAvailable(mContext)) {
+                isDeviceEnabled = false;
+            }
+
+            if (mEvent != null) {
+                mEvent.setResponseClient(new Repos());
                 EventBus.getDefault().post(mEvent);
             }
         }
     }
 
     public interface RequestMethod {
-        @GET("jakewharton")
-        Call<Responses> getUser();
+        @GET("/users/jakewharton")
+        Call<User> getUser();
 
-        @GET("/jakewharton/repos")
-        Call<Responses> getRepos();
+        @GET("/users/jakewharton/repos")
+        Call<Repos> getRepos();
     }
 }

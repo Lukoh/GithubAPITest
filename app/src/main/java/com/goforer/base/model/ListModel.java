@@ -47,4 +47,8 @@ public class ListModel <T extends BaseModel> implements ParameterizedType {
     public List<T> fromJson(JsonElement json) {
         return T.gson().fromJson(json, this);
     }
+
+    public List<T> fromJson(String string) {
+        return T.gson().fromJson(string, this);
+    }
 }

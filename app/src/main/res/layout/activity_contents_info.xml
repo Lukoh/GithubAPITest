@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container_info" >
+
+    <com.goforer.base.ui.view.SwipeViewPager
+        android:id="@+id/pager_flip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="2dp"
+        android:visibility="visible"
+        android:background="@color/colorPrimary" />
+
+</FrameLayout>

@@ -29,7 +29,7 @@ public enum Intermediary {
         });
     }
 
-    public void getRepos(Context context, String place, ResponseEvent event) {
+    public void getRepos(Context context, ResponseEvent event) {
         Call<Responses> call = RequestClient.INSTANCE.getRequestMethod(context)
                 .getRepos();
         call.enqueue(new RequestClient.RequestCallback(event) {

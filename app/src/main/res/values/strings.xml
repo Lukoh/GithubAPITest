@@ -8,4 +8,5 @@
     <string name="restart_phrase">&#10;Please restarts App.</string>
     <string name="toast_server_error_phrase">Can not connect to the server, try again later.</string>
     <string name="toast_disconnect_phrase">Can not access the internet.</string>
+    <string name="no_result">There is no information.</string>
 </resources>

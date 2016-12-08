@@ -44,7 +44,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void moveToMain() {
-        ActivityCaller.INSTANCE.callPhotosList(this);
+        ActivityCaller.INSTANCE.callMain(this);
         finish();
     }
 }

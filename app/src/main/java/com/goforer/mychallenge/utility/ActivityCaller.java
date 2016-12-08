@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.goforer.mychallenge.ui.activity.MainActivity;
+
 public enum ActivityCaller {
     INSTANCE;
 
@@ -32,5 +34,10 @@ public enum ActivityCaller {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return intent;
+    }
+
+    public void callMain(Context context) {
+        Intent intent = createIntent(context, MainActivity.class, true);
+        context.startActivity(intent);
     }
 }

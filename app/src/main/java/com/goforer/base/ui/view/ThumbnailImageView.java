@@ -30,9 +30,9 @@ public class ThumbnailImageView extends ImageView {
         super(context, attrs);
     }
 
-    public void setImage(String imageUrl) {
+    public void setImage(final Context context, String imageUrl) {
         if (imageUrl != null) {
-            Glide.with(getContext()).load(imageUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+            Glide.with(context).load(imageUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     setImageBitmap(resource);

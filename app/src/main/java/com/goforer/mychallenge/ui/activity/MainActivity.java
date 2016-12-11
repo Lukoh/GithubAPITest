@@ -1,5 +1,6 @@
 package com.goforer.mychallenge.ui.activity;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,10 @@ import com.goforer.mychallenge.model.event.ContentsUserDataEvent;
 import com.goforer.mychallenge.ui.adapter.ReposAdatper;
 import com.goforer.mychallenge.utility.ConnectionUtils;
 import com.goforer.mychallenge.web.Intermediary;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ThumbnailImageView mImageView;
     private TextView mNameView;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +62,29 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter = new ReposAdatper(this);
 
+        ContentsDataEvent reposEvent = new ContentsDataEvent(true, 1);
+        Intermediary.INSTANCE.getRepos(getApplicationContext(), reposEvent);
 
         ContentsUserDataEvent userEvent = new ContentsUserDataEvent(true, 0);
         Intermediary.INSTANCE.getUser(getApplicationContext(), userEvent);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
-        ContentsDataEvent reposEvent = new ContentsDataEvent(true, 1);
-        Intermediary.INSTANCE.getRepos(getApplicationContext(), reposEvent);
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void showMessage(String message) {
@@ -73,7 +100,43 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onEvent(ContentsDataEvent event) {
-            new parsePeposTask(this, event).execute();
+        new parsePeposTask(this, event).execute();
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     private class parseUserTask extends AsyncTask<Void, Void, User> {
@@ -100,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user == null) {
                     showMessage(getResources().getString(R.string.no_result));
                 } else {
-                    mImageView.setImage(user.getAvartarUrl());
+                    mImageView.setImage(getApplicationContext(), user.getAvartarUrl());
                     mNameView.setText(user.getName());
                 }
             } else {
@@ -123,21 +186,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List doInBackground(Void... params) {
-            return mEvent.getResponseClient();
+            mRepos = mEvent.getResponseClient();
+            Collections.sort(mRepos, new ReposComparator());
+            return mRepos;
         }
 
         @Override
-        protected void onPostExecute(List items) {
-            Collections.sort(items, new ReposComparator());
-
+        protected void onPostExecute(final List items) {
             super.onPostExecute(items);
 
             MainActivity activity = activityWeakRef.get();
             if (activity != null) {
-                for(int i = 1; i < items.size(); i++) {
-                    mAdapter.addItem((Repos)items.get(i));
-                }
-
+                mAdapter.addItems((List<Repos>) items);
                 mListView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             } else {

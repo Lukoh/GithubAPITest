@@ -11,10 +11,11 @@ import com.goforer.mychallenge.R;
 import com.goforer.mychallenge.model.data.Repos;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReposAdatper extends BaseAdapter {
     private final Context mContext;
-    private ArrayList<Repos> mItems = new ArrayList<>() ;
+    private List<Repos> mItems = new ArrayList<>() ;
 
     public ReposAdatper(final Context context) {
         mContext = context;
@@ -61,8 +62,8 @@ public class ReposAdatper extends BaseAdapter {
         return mItems.get(position) ;
     }
 
-    public void addItem(Repos repos) {
-        mItems.add(repos);
+    public void addItems(List<Repos> reposList) {
+        mItems = reposList;
     }
 
     static class ViewHolder {

@@ -4,10 +4,6 @@ import com.goforer.mychallenge.model.data.Repos;
 
 import java.util.Comparator;
 
-/**
- * Created by USER on 2016-12-08.
- */
-
 public class ReposComparator implements Comparator<Repos> {
     public ReposComparator() {
     }

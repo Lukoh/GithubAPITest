@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter = new ReposAdatper(this);
 
-
         ContentsUserDataEvent userEvent = new ContentsUserDataEvent(true, 0);
         Intermediary.INSTANCE.getUser(getApplicationContext(), userEvent);
 

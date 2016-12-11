@@ -62,11 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter = new ReposAdatper(this);
 
+        ContentsUserDataEvent userEvent = new ContentsUserDataEvent(true, 0);
+        Intermediary.INSTANCE.getUser(getApplicationContext(), userEvent);
+
         ContentsDataEvent reposEvent = new ContentsDataEvent(true, 1);
         Intermediary.INSTANCE.getRepos(getApplicationContext(), reposEvent);
 
-        ContentsUserDataEvent userEvent = new ContentsUserDataEvent(true, 0);
-        Intermediary.INSTANCE.getUser(getApplicationContext(), userEvent);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

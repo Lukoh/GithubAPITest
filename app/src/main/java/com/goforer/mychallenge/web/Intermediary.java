@@ -16,10 +16,10 @@ import retrofit2.Response;
 public enum Intermediary {
     INSTANCE;
 
-    public void getUser(Context context, ResponseEvent event)  {
+    public void getUser(Context context, String userName, ResponseEvent event)  {
 
         Call<User> call = RequestClient.INSTANCE.getRequestMethod(context)
-                .getUser();
+                .getUser(userName);
         call.enqueue(new RequestClient.RequestUserCallback(event) {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -33,9 +33,9 @@ public enum Intermediary {
         });
     }
 
-    public void getRepos(Context context, ResponseReposEvent event) {
+    public void getRepos(Context context, String userName, ResponseReposEvent event) {
         Call<List<Repos>> call = RequestClient.INSTANCE.getRequestMethod(context)
-                .getRepos();
+                .getRepos(userName);
         call.enqueue(new RequestClient.RequestReposCallback(event) {
             @Override
             public void onResponse(Call<List<Repos>> call, Response<List<Repos>> response) {

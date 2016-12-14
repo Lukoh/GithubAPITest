@@ -24,6 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public enum RequestClient {
     INSTANCE;
@@ -158,10 +159,14 @@ public enum RequestClient {
     }
 
     public interface RequestMethod {
-        @GET("/users/jakewharton")
-        Call<User> getUser();
+        @GET("/users/{name}")
+        Call<User> getUser(
+                @Path("name") String name
+        );
 
-        @GET("/users/jakewharton/repos")
-        Call<List<Repos>> getRepos();
+        @GET("/users/{name}/repos")
+        Call<List<Repos>> getRepos(
+                @Path("name") String name
+        );
     }
 }

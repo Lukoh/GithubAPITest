@@ -44,6 +44,18 @@
             android:protectionLevel="signature"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <!-- Sets the intent action to view the activity -->
+                <action android:name="android.intent.action.VIEW" />
+                <!-- Allows the link to be opened from a web browser -->
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Allows the deep link to be used without specifying the app name -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- URI goforer://github_challenge -->
+                <data android:scheme="goforer" android:host="github_challenge"/>
+                <!-- URI http://www.github_challenge.com -->
+                <data android:scheme="http" android:host="www.github_challenge.com"/>
+            </intent-filter>
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data

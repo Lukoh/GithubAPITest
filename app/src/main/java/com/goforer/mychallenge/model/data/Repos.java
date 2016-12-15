@@ -7,6 +7,9 @@ import com.goforer.base.model.BaseModel;
 import com.google.gson.annotations.SerializedName;
 
 public class Repos extends BaseModel implements Parcelable {
+    public static final int LIST_TITLE_TYPE = 0;
+    public static final int LIST_ITEM_TYPE = 1;
+
     @SerializedName("id")
     private long mId;
     @SerializedName("name")
@@ -17,6 +20,11 @@ public class Repos extends BaseModel implements Parcelable {
     private String mDescription;
     @SerializedName("stargazers_count")
     private int mStarCount;
+
+    private String mAvatarUrl;
+    private String mUserName;
+
+    private int mType;
 
     public Repos() {
     }
@@ -61,6 +69,29 @@ public class Repos extends BaseModel implements Parcelable {
         mStarCount = starCount;
     }
 
+    public String getAvatarUrl() {
+        return mAvatarUrl;
+    }
+
+    public void setAvartarUrl(String avartarUrl) {
+        mAvatarUrl = avartarUrl;
+    }
+
+    public String getUserName() {
+        return mUserName;
+    }
+
+    public void setUserName(String userName) {
+        mUserName = userName;
+    }
+
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
+    }
 
     protected Repos(Parcel in) {
         mId = in.readLong();
@@ -68,6 +99,9 @@ public class Repos extends BaseModel implements Parcelable {
         mOwner = in.readParcelable(Owner.class.getClassLoader());
         mDescription = in.readString();
         mStarCount = in.readInt();
+        mAvatarUrl = in.readString();
+        mUserName = in.readString();
+        mType = in.readInt();
     }
 
     @Override
@@ -82,6 +116,9 @@ public class Repos extends BaseModel implements Parcelable {
         dest.writeParcelable(mOwner, flags);
         dest.writeString(mDescription);
         dest.writeInt(mStarCount);
+        dest.writeString(mAvatarUrl);
+        dest.writeString(mUserName);
+        dest.writeInt(mType);
     }
 
     @SuppressWarnings("unused")

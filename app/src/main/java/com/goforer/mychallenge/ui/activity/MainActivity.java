@@ -6,12 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goforer.base.model.event.ResponseEvent;
 import com.goforer.base.model.event.ResponseListEvent;
-import com.goforer.base.ui.view.ThumbnailImageView;
 import com.goforer.mychallenge.R;
 import com.goforer.mychallenge.model.data.Repos;
 import com.goforer.mychallenge.model.data.User;
@@ -36,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private ReposAdatper mAdapter;
 
-    private ThumbnailImageView mImageView;
-    private TextView mNameView;
-
-    private String mUserName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
+        String mUserName;
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri uri = intent.getData();
             mUserName = uri.getQueryParameter(USER_NAME);
@@ -60,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
             mUserName = "jakewharton";
         }
 
-        mImageView = (ThumbnailImageView) findViewById(R.id.iv_image);
-        mNameView = (TextView) findViewById(R.id.tv_name);
         mListView = (ListView) findViewById(R.id.lv_repos);
 
         mAdapter = new ReposAdatper(this);
@@ -125,8 +117,11 @@ public class MainActivity extends AppCompatActivity {
                 if (user == null) {
                     showMessage(getResources().getString(R.string.no_result));
                 } else {
-                    mImageView.setImage(getApplicationContext(), user.getAvartarUrl());
-                    mNameView.setText(user.getName());
+                    Repos repos = new Repos();
+                    repos.setAvartarUrl(user.getAvartarUrl());
+                    repos.setUserName(user.getName());
+                    repos.setType(Repos.LIST_TITLE_TYPE);
+                    mAdapter.addItem(repos);
                 }
             } else {
                 showMessage(getResources().getString(R.string.no_result));
@@ -162,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
             MainActivity activity = activityWeakRef.get();
             if (activity != null) {
-                mAdapter.addItems((List<Repos>) items);
+                for(int i = 0; i < items.size(); i++) {
+                    ((Repos)items.get(i)).setType(Repos.LIST_ITEM_TYPE);
+                    mAdapter.addItem((Repos)items.get(i));
+                }
                 mListView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             } else {
